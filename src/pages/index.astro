@@ -1,0 +1,30 @@
+---
+import {SliderEvents} from '../components/SliderEvents.jsx'
+import Layout from '../layouts/Layout.astro'
+import EventsByType from '../components/EventsByType.astro'
+
+import { getAllEvents, getEventsByType } from '../lib/getsData'
+
+const events = getAllEvents()
+const eventsByType = getEventsByType()
+---
+
+<Layout subtitle=''>
+	<SliderEvents
+		events={events.slice(0, 5)}
+		client:visible 
+	/>
+	<div class='max-w-[750px] mx-auto'>
+		{
+			eventsByType.map(e => {
+				return (
+					<EventsByType eventsByType={e} />
+				)
+			})
+		}
+	</div>
+</Layout>
+
+<style>
+	
+</style>

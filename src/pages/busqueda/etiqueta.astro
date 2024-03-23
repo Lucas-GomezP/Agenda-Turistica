@@ -1,0 +1,39 @@
+---
+import { getAllTags, getEventByTag } from '../../lib/getsData'
+import Layout from '../../layouts/Layout.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+import FilteredEvents from '../../components/FilteredEvents.astro'
+import FilterEvents from '../../components/FilterEvents.astro'
+
+const tags = getAllTags()
+const eventsByTags = tags.map(t => {
+  const actualEvents = getEventByTag({tag: t})
+  return [t, actualEvents]
+})
+---
+
+<Layout subtitle='Busqueda'>
+  <FilterEvents options={tags} title='etiqueta' />
+  {
+    eventsByTags.map(et => {
+      const actualTag = et[0]
+      const actualEvents = et[1]
+      return (
+      <div class="">  
+        <TitleForSearchResult title='' info={actualTag} />
+        <div class='max-w-[750px] mx-auto mt-2 px-2'>
+          <div class='grid grid-flow-col gap-2 overflow-x-auto snap-x md:justify-evenly'>
+            {
+              actualEvents.map(ee => {
+                return (
+                  <FilteredEvents event={ee} />
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
+      )
+    })
+  }
+</Layout>

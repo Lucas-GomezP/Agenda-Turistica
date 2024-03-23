@@ -1,0 +1,38 @@
+---
+import { getAllMunicipality, getEventByMunicipality, getMunicipalityById } from '../../lib/getsData'
+import Layout from '../../layouts/Layout.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+import FilteredEvents from '../../components/FilteredEvents.astro'
+import FilterEvents from '../../components/FilterEvents.astro'
+
+const municipalitys = getAllMunicipality()
+const eventsByMunicipality = municipalitys.map(m => {
+  const actualEvents = getEventByMunicipality({municipality: m.nombre_municipio})
+  return actualEvents
+})
+
+const municipalitysNames = municipalitys.map(m => m.nombre_municipio)
+---
+
+<Layout subtitle='Busqueda'>
+  <FilterEvents options={municipalitysNames} title='municipio' />
+  {
+    eventsByMunicipality.map(em => {
+      const municipality = getMunicipalityById({idEvent: em[0].id_municipio})
+      return (
+        <TitleForSearchResult title='' info={municipality.nombre_municipio} />
+        <div class='max-w-[750px] mx-auto mt-2 px-2'>
+          <div class='grid grid-flow-col gap-2 overflow-x-auto snap-x md:justify-evenly'>
+            {
+              em.map(e => {
+                return (
+                  <FilteredEvents event={e} />
+                )
+              })
+            }
+          </div>
+        </div>
+      )
+    })
+  }
+</Layout>

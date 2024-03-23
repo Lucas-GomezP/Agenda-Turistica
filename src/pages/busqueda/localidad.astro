@@ -1,0 +1,38 @@
+---
+import { getAllLocations, getEventByLocation, getLocationById } from '../../lib/getsData'
+import Layout from '../../layouts/Layout.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+import FilteredEvents from '../../components/FilteredEvents.astro'
+import FilterEvents from '../../components/FilterEvents.astro'
+
+const locations = getAllLocations()
+const eventsByLocation = locations.map(l => {
+  const actualEvents = getEventByLocation({location: l.nombre_localidad})
+  return actualEvents
+})
+
+const locationsNames = locations.map(l => l.nombre_localidad)
+---
+
+<Layout subtitle='Busqueda'>
+  <FilterEvents options={locationsNames} title='localidad' />
+  {
+    eventsByLocation.map(el => {
+      const location = getLocationById({idEvent: el[0].id_localidad})
+      return (
+        <TitleForSearchResult title='' info={location.nombre_localidad} />
+        <div class='max-w-[750px] mx-auto mt-2 px-2'>
+          <div class='grid grid-flow-col gap-2 overflow-x-auto snap-x md:justify-evenly'>
+            {
+              el.map(e => {
+                return (
+                  <FilteredEvents event={e} />
+                )
+              })
+            }
+          </div>
+        </div>
+      )
+    })
+  }
+</Layout>

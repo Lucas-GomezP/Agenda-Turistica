@@ -1,0 +1,42 @@
+---
+import DiagonalArrowIcon from '../Icons/DiagonalArrowIcon.astro'
+
+interface Props {
+	options: any
+  title: string
+}
+
+const { options, title } = Astro.props
+
+options.unshift('seleccione una opcion')
+---
+
+<div class='p-2 bg-light-surface dark:bg-dark-surface transition-colors duration-200 m-2 rounded-lg sticky top-2 z-20 text-light-text dark:text-dark-text h-24 flex flex-col justify-between'>
+  <p class='text-center font-semibold'>Seleccione {title}</p>
+  <div class='flex items-center gap-2'>
+    <select name='select-group-filtered' class='rounded-lg p-2 w-full' id='select-filtered'>
+      {
+        options.map(o => {
+          const newStr = o.replace(/ /g, "-")
+          return (
+            <option value={newStr}>
+              {o}
+            </option>
+          )
+        })
+      }
+    </select>
+    <a href="#" class='p-2 bg-light-secondary rounded-lg dark:bg-dark-secondary' id='link-local-filtered'><DiagonalArrowIcon /></a>
+  </div>
+</div>
+
+<script>
+  const select = document.getElementById('select-filtered')
+  const a = document.getElementById('link-local-filtered')
+  select?.addEventListener('change', () => {
+    const value = select.value
+    const href = `#${value}`
+    console.log(href)
+    a?.setAttribute('href', href)
+  })
+</script>

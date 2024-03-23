@@ -1,0 +1,32 @@
+---
+import { getAllMunicipality, getEventByMunicipality } from '../../lib/getsData.js'
+import Layout from '../../layouts/Layout.astro'
+import CardSearchResult from '../../components/CardSearchResult.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+
+const {municipality} = Astro.params
+
+export const getStaticPaths = (() => {
+  const municipality = getAllMunicipality()
+  return municipality.map(m => {
+    return (
+      {params: {'municipality': m.nombre_municipio.toLowerCase()}}
+    )
+  })
+})
+
+const events = getEventByMunicipality({municipality: municipality})
+---
+
+<Layout subtitle={`${municipality}`}>
+  <TitleForSearchResult title='Municipalidad' info={municipality} />
+  <div class='max-w-[750px] mx-auto p-2'>
+    {
+      events.map(e => {
+        return (
+          <CardSearchResult event={e} />
+        )
+      })
+    }
+  </div>
+</Layout>

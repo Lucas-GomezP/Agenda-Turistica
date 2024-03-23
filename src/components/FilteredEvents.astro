@@ -1,0 +1,28 @@
+---
+interface Props {
+	event: any
+}
+
+const { event } = Astro.props
+---
+
+<a 
+  href={`/evento/${event.id_evento}`}
+  class={`flex flex-col p-2 overflow-hidden 
+  bg-light-surface/50 rounded-lg hover:bg-light-surface dark:bg-dark-surface/50 dark:hover:bg-dark-surface
+  text-light-text dark:text-dark-text
+    transition-colors duration-200 
+    min-w-40 max-w-60 snap-center mb-2
+  `}
+>
+  <picture class='relative'>      
+    <img 
+      src={event.imagen} 
+      alt={event.nombre_evento}
+      class='z-20 object-contain max-h-[700px] w-full aspect-square bg-light-secondary dark:bg-dark-secondary rounded-lg'
+    />
+  </picture>
+  <div>
+    <h4 class='text-center'>{event.nombre_evento}</h4>
+  </div>
+</a>

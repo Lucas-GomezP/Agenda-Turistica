@@ -1,0 +1,14 @@
+---
+interface Props {
+	title: string
+  info: string
+}
+
+const {title, info} = Astro.props
+
+const newStr = info.replace(/ /g, "-")
+---
+
+<div class='bg-light-surface dark:bg-dark-surface rounded-lg p-2 mx-2 mt-2'>
+  <h2 id={newStr} class='text-center text-light-primary dark:text-dark-primary text-nowrap font-semibold text-lg'>{title.length > 0 ? `${title} actual: ` : ''}<span class='capitalize'>{info}</span></h2>
+</div>

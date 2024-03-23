@@ -1,0 +1,32 @@
+---
+import { getAllLocations, getEventByLocation  } from '../../lib/getsData.js'
+import Layout from '../../layouts/Layout.astro'
+import CardSearchResult from '../../components/CardSearchResult.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+
+const {location} = Astro.params
+
+export const getStaticPaths = (() => {
+  const location = getAllLocations()
+  return location.map(l => {
+    return (
+      {params: {'location': l.nombre_localidad.toLowerCase()}}
+    )
+  })
+})
+
+const events = getEventByLocation({location: location})
+---
+
+<Layout subtitle={`${location}`}>
+  <TitleForSearchResult title='Localidad' info={location} />
+  <div class='max-w-[750px] mx-auto p-2'>
+    {
+      events.map(e => {
+        return (
+          <CardSearchResult event={e} />
+        )
+      })
+    }
+  </div>
+</Layout>

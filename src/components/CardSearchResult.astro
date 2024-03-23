@@ -1,0 +1,44 @@
+---
+import { getMunicipalityById, getLocationById } from '../lib/getsData.js'
+
+const {event} = Astro.props
+
+const municipality = getMunicipalityById({idEvent: event.id_evento})
+const location = getLocationById({idEvent: event.id_evento})
+const actualDate = event?.fecha_inicio?.split('-')
+---
+
+<a 
+  href={`/evento/${event.id_evento}`}
+  class={`flex flex-col lg:flex-row lg:gap-2 p-2 overflow-hidden 
+  bg-light-surface/50 rounded-lg hover:bg-light-surface dark:bg-dark-surface/50 dark:hover:bg-dark-surface
+  text-light-text dark:text-dark-text
+    transition-colors duration-200 
+    mb-2
+  `}
+>
+  <picture class='relative min-h-40 max-h-60 lg:w-96'>
+    <img 
+      src={event.imagen} 
+      alt={event.nombre_evento}
+      class='z-20 object-contain w-full max-h-60 aspect-square bg-light-secondary dark:bg-dark-secondary rounded-lg'
+    />
+  </picture>
+  <div class='w-full flex flex-col justify-center'>
+    <h3 class='text-center text-xl font-semibold text-light-variant dark:text-dark-variant transition-colors duration-200'>{event.nombre_evento}</h3>
+    <p class='text-center'>{actualDate ? `${new Date(`${actualDate[1]}/${actualDate[2]}/${actualDate[0]}`).toLocaleDateString()}` : `${event?.mes_estimado}`}</p>
+    <div class='flex justify-center gap-1'>
+      <p
+        class=''
+      >
+        {location?.nombre_localidad}
+      </p>
+      ,
+      <p
+        class=''
+      >
+        {municipality?.nombre_municipio}
+      </p>
+    </div>
+  </div>
+</a>

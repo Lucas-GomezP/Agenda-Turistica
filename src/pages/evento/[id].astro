@@ -1,0 +1,94 @@
+---
+import { getAllEvents, getEventById, getMunicipalityById, getLocationById, getTypeById } from '../../lib/getsData.js'
+import Layout from '../../layouts/Layout.astro'
+import LocationIcon from '../../Icons/LocationIcon.astro'
+import DescriptionIcon from '../../Icons/DescriptionIcon.astro'
+
+const {id: eventId} = Astro.params
+
+export const getStaticPaths = (() => {
+  const events = getAllEvents()
+  return events.map(e => {
+    return (
+      {params: {'id': e.id_evento}}
+    )
+  })
+})
+
+const event = getEventById({id: eventId})
+const tags = event?.palabras_claves.split(', ')
+const type = getTypeById({idEvent: eventId})
+const municipality = getMunicipalityById({idEvent: eventId})
+const location = getLocationById({idEvent: eventId})
+const actualDate = event?.fecha_inicio?.split('-')
+---
+
+<Layout subtitle={event?.nombre_evento}>
+  <section class='relative max-h-96 w-full'>
+    <picture class='relative h-full flex justify-center my-2'>
+      <img 
+        src={event?.imagen} 
+        alt={event?.nombre_evento}
+        class='rounded-md absolute top-0 blur-md object-fill w-full h-full z-10 p-4'
+      >
+      <img 
+      src={event?.imagen} 
+      alt={event?.nombre_evento}
+      class='rounded-md relative object-contain h-96 z-20 items-center'
+      >
+    </picture>
+    <div class='p-2 max-w-[750px] m-auto pt-4 flex flex-col gap-4 text-light-text dark:text-dark-text transition-colors duration-200'>
+      <div>
+        <h2 class='font-bold text-3xl text-center'>{event?.nombre_evento}</h2>
+      </div>
+      <div>
+        <p class='text-lg text-center'>{actualDate ? `${new Date(`${actualDate[1]}/${actualDate[2]}/${actualDate[0]}`).toLocaleDateString()}` : `${event?.mes_estimado}`}</p>
+      </div>
+      <div class='flex justify-center'>
+        <a 
+          href={`/tipo/${type?.nombre_tipo_de_evento.toLowerCase()}`}
+          class='bg-light-secondary/70 dark:bg-dark-secondary/70 hover:bg-light-secondary dark:hover:bg-dark-secondary p-2 text-lg font-semibold rounded-md text-light-text dark:text-dark-text transition-colors duration-200'
+        >
+          {type?.nombre_tipo_de_evento}
+        </a>
+      </div>
+      <div class='flex justify-center gap-2'>
+        {
+          tags?.map(tag => {
+            return (
+              <a 
+                href={`/etiqueta/${tag.toLowerCase()}`}
+                class='bg-light-secondary/70 dark:bg-dark-secondary/70 hover:bg-light-secondary dark:hover:bg-dark-secondary p-2 text-lg font-semibold rounded-md text-light-text dark:text-dark-text transition-colors duration-200'
+              >
+                {tag}
+              </a>
+            )
+          })
+        }
+      </div>
+      <div class=' flex justify-center flex-col'>
+        <h3 class='text-lg font-semibold text-light-variant dark:text-dark-variant flex items-center'><LocationIcon /> Ubicacion</h3>
+        <p class='text-center'>{event?.direccion}</p>
+        <div class='flex justify-center gap-1'>
+          <a
+            href={`/locacion/${location?.nombre_localidad.toLowerCase()}`}
+            class='underline hover:text-light-primary dark:hover:text-dark-primary'
+          >
+            {location?.nombre_localidad}
+          </a>
+          ,
+          <a 
+            href={`/municipio/${municipality?.nombre_municipio.toLowerCase()}`}
+            class='underline hover:text-light-primary dark:hover:text-dark-primary'
+          >
+            {municipality?.nombre_municipio}
+          </a>
+        </div>
+      </div>
+      <div>
+        <h3 class='text-lg font-semibold text-light-variant dark:text-dark-variant flex items-center'><DescriptionIcon /> Descripcion</h3>
+        <p class='text-balance'>{event?.descripcion}</p>
+      </div>
+    </div>
+  </section>
+</Layout>

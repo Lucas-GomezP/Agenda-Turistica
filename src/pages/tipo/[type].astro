@@ -1,0 +1,32 @@
+---
+import { getAllTypeEvents, getEventByType } from '../../lib/getsData.js'
+import Layout from '../../layouts/Layout.astro'
+import CardSearchResult from '../../components/CardSearchResult.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+
+const {type} = Astro.params
+
+export const getStaticPaths = (() => {
+  const types = getAllTypeEvents()
+  return types.map(t => {
+    return (
+      {params: {'type': t.nombre_tipo_de_evento.toLowerCase()}}
+    )
+  })
+})
+
+const events = getEventByType({type: type})
+---
+
+<Layout subtitle={`${type}`}>
+  <TitleForSearchResult title='Tipo' info={type} />
+  <div class='max-w-[750px] mx-auto p-2'>
+    {
+      events.map(e => {
+        return (
+          <CardSearchResult event={e} />
+        )
+      })
+    }
+  </div>
+</Layout>

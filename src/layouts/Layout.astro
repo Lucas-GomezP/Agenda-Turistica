@@ -1,0 +1,91 @@
+---
+import { HeaderAside } from '../components/HeaderAside.jsx'
+import { ViewTransitions } from 'astro:transitions'
+
+interface Props {
+	subtitle: string | undefined
+}
+
+const { subtitle } = Astro.props
+---
+
+<!doctype html>
+<html lang='en' class="transition-color duration-200" id="html-tag">
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='description' content='Astro description' />
+		<meta name='viewport' content='width=device-width' />
+		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+		<meta name='generator' content={Astro.generator} />
+		<title>Agenda Turistica{subtitle !== 'undefined' && subtitle.length > 0 ? ` | ${subtitle}` : ''}</title>
+		<ViewTransitions />
+	</head>
+	<body>
+		<div id='app' class='relative h-screen overflow-hidden'>
+			<HeaderAside 
+				client:only
+				transition:name='header-aside'
+				transition:persist
+			/>
+			<main 
+				class='bg-light-background dark:bg-dark-background transition-color duration-200
+				col-span-3 lg:[grid-area:main]
+				overflow-y-auto
+				'
+			>
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+  	--first-day-start : 5;
+	}
+
+	.first-day {
+		grid-column-start: var(--first-day-start);
+	}
+
+	.day {
+		font-size: 2ch;
+	}
+	#app {
+		display: grid;
+		grid-template-areas: 
+		'header header header'
+		'main main aside';
+		grid-template-columns: 1fr 1fr 400px;
+		grid-template-rows: auto 1fr;
+	}
+
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151a;
+		background-size: 224px;
+	}
+
+	/* width */
+	::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+	}
+	
+	/* Track */
+	::-webkit-scrollbar-track {
+			background: #dbe0de;
+			border-radius: 0.5rem;
+	}
+	
+	/* Handle */
+	::-webkit-scrollbar-thumb {
+			background: rgb(82 82 91);
+			border-radius: 0.5rem;
+	}
+	
+	/* Handle on hover */
+	::-webkit-scrollbar-thumb:hover {
+			background: #555;
+	}
+</style>

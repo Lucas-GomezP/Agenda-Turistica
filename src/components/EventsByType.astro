@@ -1,0 +1,49 @@
+---
+import DiagonalArrowIcon from '../Icons/DiagonalArrowIcon.astro'
+
+interface Props {
+	eventsByType: any
+}
+
+const { eventsByType } = Astro.props
+const {type, events} = eventsByType
+---
+
+<section class='relative'>
+  <div class='flex items-center bg-light-surface dark:bg-dark-surface rounded-lg p-2 m-2 '>
+    <div class='w-1/2' />
+    <h3 class='text-light-primary dark:text-dark-primary text-nowrap font-semibold text-lg'>{type}</h3>
+    <div class='w-1/2 flex justify-end'>
+      <a href={`/tipo/${type.toLowerCase()}`} class='flex items-center gap-1  text-light-text dark:text-dark-text hover:text-light-primary dark:hover:text-dark-primary transition-colors duration-200'><span class='hidden lg:block'>Ver todos</span> <DiagonalArrowIcon /></a>
+    </div>
+  </div>
+  <div class='grid grid-flow-col gap-2 overflow-x-auto snap-x md:justify-evenly'>
+    {
+      events.map(e => {
+        return (
+          <a 
+            href={`/evento/${e.id_evento}`}
+            class={`flex flex-col p-2 overflow-hidden 
+              bg-light-surface/50 rounded-lg hover:bg-light-surface dark:bg-dark-surface/50 dark:hover:bg-dark-surface
+              text-light-text dark:text-dark-text
+              transition-colors duration-200 
+              min-w-40 max-w-60 snap-center mb-2
+              `}
+          >
+            <picture class='relative'>
+              
+              <img 
+              src={e.imagen} 
+              alt={e.nombre_evento}
+              class='z-20 object-contain max-h-[700px] w-full aspect-square bg-light-secondary dark:bg-dark-secondary rounded-lg'
+              />
+            </picture>
+            <div>
+              <h4 class='text-center'>{e.nombre_evento}</h4>
+            </div>
+          </a>
+        )
+      })
+    }
+  </div>
+</section>

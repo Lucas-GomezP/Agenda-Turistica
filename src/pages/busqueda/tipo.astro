@@ -1,0 +1,38 @@
+---
+import { getAllTypeEvents, getEventByType, getTypeById } from '../../lib/getsData'
+import Layout from '../../layouts/Layout.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+import FilteredEvents from '../../components/FilteredEvents.astro'
+import FilterEvents from '../../components/FilterEvents.astro'
+
+const types = getAllTypeEvents()
+const eventsByTypes = types.map(t => {
+  const actualEvents = getEventByType({type: t.nombre_tipo_de_evento})
+  return actualEvents
+})
+
+const typesNames = types.map(t => t.nombre_tipo_de_evento)
+---
+
+<Layout subtitle='Busqueda'>
+  <FilterEvents options={typesNames} title='tipo de evento' />
+  {
+    eventsByTypes.map(et => {
+      const type = getTypeById({idEvent: et[0].id_localidad})
+      return (
+        <TitleForSearchResult title='' info={type.nombre_tipo_de_evento} />
+        <div class='max-w-[750px] mx-auto mt-2 px-2'>
+          <div class='grid grid-flow-col gap-2 overflow-x-auto snap-x md:justify-evenly'>
+            {
+              et.map(e => {
+                return (
+                  <FilteredEvents event={e} />
+                )
+              })
+            }
+          </div>
+        </div>
+      )
+    })
+  }
+</Layout>

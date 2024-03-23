@@ -1,0 +1,32 @@
+---
+import { getAllTags, getEventByTag } from '../../lib/getsData.js'
+import Layout from '../../layouts/Layout.astro'
+import CardSearchResult from '../../components/CardSearchResult.astro'
+import TitleForSearchResult from '../../components/TitleForSearchResult.astro'
+
+const {tag} = Astro.params
+
+export const getStaticPaths = (() => {
+  const tags = getAllTags()
+  return tags.map(t => {
+    return (
+      {params: {'tag': t}}
+    )
+  })
+})
+
+const events = getEventByTag({tag: tag})
+---
+
+<Layout subtitle={`${tag}`}>
+  <TitleForSearchResult title='Etiqueta' info={tag} />
+  <div class='max-w-[750px] mx-auto p-2'>
+    {
+      events.map(e => {
+        return (
+          <CardSearchResult event={e} />
+        )
+      })
+    }
+  </div>
+</Layout>
