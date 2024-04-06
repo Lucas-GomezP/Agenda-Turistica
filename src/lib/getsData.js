@@ -48,7 +48,7 @@ export const getEventsInDay = ({day, month}) => {
   const eventsInDay = eventsInMonth.filter(e => {
     if (eventHaveStartDate({event: e})) {
       const [y, m, d] = e.fecha_inicio.split(separatorStartDay)
-      return d === day.toString()
+      return parseInt(d) === parseInt(day)
     }
   })
   return eventsInDay
@@ -65,6 +65,17 @@ export const getEventsByType = () => {
   return eventsByType
 }
 
+export const getEventByMunicipalitys = () => {
+  const events = getAllEvents()
+  const municipalitys = getAllMunicipality()
+  const eventsByMunicipality = []
+  municipalitys.forEach(municipality => {
+    const eventsFiltered = events.filter(e => e.id_municipio === municipality.id_municipio)
+    eventsByMunicipality.push({type: municipality.nombre_municipio, events:eventsFiltered})
+  })
+  return eventsByMunicipality
+}
+
 export const getMunicipalityById = ({idEvent}) => {
   const event = getEventById({id: idEvent})
   const municipalitys = getAllMunicipality()
@@ -74,7 +85,7 @@ export const getMunicipalityById = ({idEvent}) => {
 export const getLocationById = ({idEvent}) => {
   const event = getEventById({id: idEvent})
   const locations = getAllLocations()
-  return locations.find(l => l.id_localidad === event.id_localidad)
+  return locations.find(l => parseInt(l.id_localidad) === parseInt(event.id_localidad))
 }
 
 export const getTypeById = ({idEvent}) => {

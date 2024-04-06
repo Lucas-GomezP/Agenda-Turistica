@@ -23,13 +23,13 @@ const { subtitle } = Astro.props
 	<body>
 		<div id='app' class='relative h-screen overflow-hidden'>
 			<HeaderAside 
-				client:only
+				client:visible
 				transition:name='header-aside'
 				transition:persist
 			/>
 			<main 
 				class='bg-light-background dark:bg-dark-background transition-color duration-200
-				col-span-3 lg:[grid-area:main]
+				col-span-3 lg:col-span-2 lg:[grid-area:main]
 				overflow-y-auto
 				'
 			>

@@ -7,60 +7,40 @@ import { getDateEvents } from '../lib/getsData'
 import { TypeEvent } from './TypeEvent'
 
 export const Calendar = ({events, handleActualMonth, handleActualDay}) => {
-  // Seteamos el lenguaje
   const lang = 'es'
-  // Obtenemos la fecha actual
   const actualDate = new Date()
-  // Obtenemos el dia actual (el primer dia es 1, 0 es el ultimo dia del mes anterior)
-  const [actualDay, setActualDay] = useState(actualDate.getDate())
+  const actualDay = actualDate.getDate()
   const [selectedDay, setSelectedDay] = useState(actualDay)
-  // Obtenemos el mes actual, enero es 0
   const [month, setMonth] = useState(actualDate.getMonth())
-  // Obtenemos el año actual, el numero del año como tal
   const [year, setYear] = useState(actualDate.getFullYear())
-  // Obtenemos el inicio de semana de este mes, domingo es 0, lunes es 1
   const [startWeekDay, setStartWeekDay] = useState(new Date(year, month, 1).getDay())
-  // Obtenemos la cantidad de dias en el mes
   const [daysInMonth, setDaysInMonth] = useState(new Date(year, month + 1, 0).getDate())
-  // Creamos el array de los dias del mes
   const [monthDays, setMonthDays] = useState([...Array(daysInMonth).keys()])
 
-  // Obtenemos el nombre del mes
-  const { monthText, changeMonthName } = useObtainMonthName({lang, year, month})
-  // Obtenemos los nombres de los dias de la semana
-  const { weekDayText } = useObtainWeekDaysName({lang})
-
-  useEffect(() => {
-    const newMonthDays = [...Array(daysInMonth).keys()]
-    setMonthDays(newMonthDays)
-  }, [daysInMonth])
+  const { monthText, changeMonthText } = useObtainMonthName({ lang, year, month })
+  const { weekDayText } = useObtainWeekDaysName({ lang, long: 'short' })
 
   useEffect(() => {
     const newDaysInMonth = new Date(year, month + 1, 0).getDate()
     setDaysInMonth(newDaysInMonth)
     const newStartWeekDay = new Date(year, month, 1).getDay()
     setStartWeekDay(newStartWeekDay)
-    setStartWeekStyle(newStartWeekDay)
-  }, [month, year, daysInMonth])
+    const newMonthDays = [...Array(newDaysInMonth).keys()]
+    setMonthDays(newMonthDays)
+  }, [month, year])
 
   const changeMonth = ({ change }) => {
     const newMonth = month + change
     setMonth(newMonth)
     const newYear = new Date(actualDate.getFullYear(), newMonth, 1).getFullYear()
     setYear(newYear)
-    changeMonthName(newYear, newMonth)
+    changeMonthText(newYear, newMonth)
   }
 
   const handleSelectedDay = (newDay) => {
     const newSelectedDay = newDay.toString()
     setSelectedDay(newSelectedDay)
   }
-  
-  const [dateEvents, setDateEvents] = useState([])
-  useEffect(() => {
-    const newDateEvents = getDateEvents()
-    setDateEvents(newDateEvents)
-  }, [events])
   
   useEffect(() => {
     handleActualMonth({month: monthText})
@@ -95,7 +75,13 @@ export const Calendar = ({events, handleActualMonth, handleActualDay}) => {
                 <li
                   key={day + 1}
                   className={`
-                    ${day === 0 ? 'first-day' : ''}
+                    ${startWeekDay === 0 && day === 0 ? '' : ''}
+                    ${startWeekDay === 1 && day === 0 ? 'col-start-1' : ''}
+                    ${startWeekDay === 2 && day === 0 ? 'col-start-2' : ''}
+                    ${startWeekDay === 3 && day === 0 ? 'col-start-3' : ''}
+                    ${startWeekDay === 4 && day === 0 ? 'col-start-4' : ''}
+                    ${startWeekDay === 5 && day === 0 ? 'col-start-5' : ''}
+                    ${startWeekDay === 6 && day === 0 ? 'col-start-6' : ''}
                     ${day + 1 === actualDay && month === actualDate.getMonth() ? 'bg-light-primary dark:bg-dark-primary transition-color duration-200' : ''}
                     ${day + 1 === parseInt(selectedDay) ? 'ring-2 z-[5] ring-light-secondary dark:ring-dark-secondary' : ''}
                     day text-center border min-h-12 hover:bg-light-secondary dark:hover:bg-dark-secondary

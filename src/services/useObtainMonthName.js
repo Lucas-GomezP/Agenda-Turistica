@@ -6,13 +6,13 @@ export const useObtainMonthName = ({ lang, year, month }) => {
   // Obtenemos el nombre del mes
   const [monthText, setMonthText] = useState(formatMonth.format(new Date(year, month)))
   // Creamos la funcion que cambia el nombre del mes
-  const changeMonthName = (newYear, newMonth) => {
+  const changeMonthText = (newYear, newMonth) => {
     const newMonthName = formatMonth.format(new Date(newYear, newMonth))
     setMonthText(newMonthName)
   }
 
   useEffect(() => {
-    changeMonthName(year, month)
+    changeMonthText(year, month)
   }, [formatMonth])
   // Controlamos si cambia el idioma
   useEffect(() => {
@@ -20,5 +20,5 @@ export const useObtainMonthName = ({ lang, year, month }) => {
     setFormatMonth(newFormatMonth)
   }, [lang])
 
-  return { monthText, changeMonthName }
+  return { monthText, changeMonthText }
 }

@@ -3,10 +3,10 @@ import {SliderEvents} from '../components/SliderEvents.jsx'
 import Layout from '../layouts/Layout.astro'
 import EventsByType from '../components/EventsByType.astro'
 
-import { getAllEvents, getEventsByType } from '../lib/getsData'
+import { getAllEvents, getEventByMunicipalitys } from '../lib/getsData'
 
 const events = getAllEvents()
-const eventsByType = getEventsByType()
+const eventsByType = getEventByMunicipalitys()
 ---
 
 <Layout subtitle=''>
